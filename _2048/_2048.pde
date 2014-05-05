@@ -7,7 +7,7 @@ void setup()
 int blockDirection;
 int numberOfBlocks = 4;
 
-//create a struct block
+
 struct Point
 {
   int x;
@@ -17,16 +17,19 @@ struct Point
 };
 
 
-Point s1 = {0,1,7,-1};
+Point s1 = {2,1,7,-1};
 Point s2 = {0,3,3,-1};
-Point s3 = {0,5,2,-1};
-Point s4 = {0,7,1,-1};
+Point s3 = {4,5,2,-1};
+Point s4 = {6,7,1,-1};
 
-//define the array
+
 Point blockArray[64] = {s1, s2, s3, s4};
+
+
 
 void loop()
 {
+  ClearSlate();
   for (int i = 0; i < numberOfBlocks; i++)
   {
     drawBlock(blockArray[i].x,blockArray[i].y,blockArray[i].color);
@@ -34,39 +37,41 @@ void loop()
   
   DisplaySlate();
   delay(200);
-  ClearSlate();
+
   
   
   CheckButtonsPress();
     if(Button_Left)
     {
-      //updateBlockDirection();
       blockDirection=270;
+      updateBlockDirection();
       updateBlock();
     }
     if(Button_Up)
     {
-      //updateBlockDirection();
       blockDirection=0;
+      updateBlockDirection();
       updateBlock();
     }
     if(Button_Right)
     {
-      //updateBlockDirection();
       blockDirection=90;
+      updateBlockDirection();
       updateBlock();
     }
     if(Button_Down)
     {
-      //updateBlockDirection();
       blockDirection=180;
+      updateBlockDirection();
       updateBlock();
     }
     
+    if (Button_A)
+      printArray();
 }    
 
 
-//draw block
+
 void drawBlock(int x, int y, int color)
 {
   DrawPx(x,y,color);
@@ -76,29 +81,15 @@ void drawBlock(int x, int y, int color)
  
 }
 
-/*void updateBlockDirection()
+void updateBlockDirection()
 {
   for(int i; i < numberOfBlocks; i++)
   {
     blockArray[i].dir= blockDirection;
-    
-    if(blockArray[i].y > 7)
-      blockArray[i].y = 7;
-      
-    if(blockArray[i].y < 1)
-      blockArray[i].y = 1;
-    
-    if(blockArray[i].x > 6)
-      blockArray[i].x = 6;
-    
-    if(blockArray[i].x < 0)
-      blockArray[i].x = 0;
   }
   
-
-  
 }
-*/
+
 
 void updateBlock()
 {
@@ -106,14 +97,16 @@ void updateBlock()
   {
     if(blockDirection == 270)
     {
-      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) {
+      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) 
+      {
         blockArray[i].x-=2;
       }
     }
     
     if(blockDirection == 0)
     {
-      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 && blockArray[i].y < 7) {
+      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 && blockArray[i].y < 7) 
+      {
         blockArray[i].y+=2;
        
       }
@@ -121,7 +114,8 @@ void updateBlock()
    
     if(blockDirection == 90)
     {
-      if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0 && blockArray[i].x < 6) {
+      if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0 && blockArray[i].x < 6) 
+      {
         blockArray[i].x+=2;
        
       }
@@ -129,10 +123,29 @@ void updateBlock()
     
     if(blockDirection == 180)
     {
-      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 && blockArray[i].y > 1) {
+      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 && blockArray[i].y > 1) 
+      {
         blockArray[i].y-=2;
        
       }
     }
   }
 }
+
+void printArray()
+{
+  for (int i = 0; i < numberOfBlocks; i++)
+  {
+    Serial.print("Block No. ");
+    Serial.println(i);
+    Serial.print("x:");
+    Serial.println(blockArray[i].x);
+    Serial.print("y:");
+    Serial.println(blockArray[i].y);
+    Serial.print("dir:");
+    Serial.println(blockArray[i].dir);
+    Serial.println();
+  }
+}
+    
+    
