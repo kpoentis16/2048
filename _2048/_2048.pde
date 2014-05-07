@@ -6,6 +6,7 @@ void setup()
 }
 int blockDirection;
 int numberOfBlocks = 4;
+boolean moveStart = false;
 
 
 struct Point
@@ -19,9 +20,8 @@ struct Point
 
 Point s1 = {2,1,7,-1};
 Point s2 = {0,3,3,-1};
-Point s3 = {4,5,2,-1};
+Point s3 = {4,5,3,-1};
 Point s4 = {6,7,1,-1};
-
 
 
 Point blockArray[64] = {s1, s2, s3, s4};
@@ -39,34 +39,32 @@ void loop()
   
   DisplaySlate();
   delay(200);
-
   
   
   CheckButtonsPress();
     if(Button_Left)
     {
       blockDirection=270; //changes all block directions to 270
-      //updateBlockDirection();
-      updateBlock();
+      moveStart = true;
     }
     if(Button_Up)
     {
       blockDirection=0;
-      //updateBlockDirection();
-      updateBlock();
+      moveStart = true;
     }
     if(Button_Right)
     {
       blockDirection=90;
-      //updateBlockDirection();
-      updateBlock();
+      moveStart = true;
     }
     if(Button_Down)
     {
       blockDirection=180;
-      //updateBlockDirection();
-      updateBlock();
+      moveStart = true;
     }
+    
+    if(moveStart==true)
+      updateBlock();
     
      updateBlockDirection();
     
@@ -103,35 +101,37 @@ void updateBlock() //checks by reading px on screen and updates the block locati
   {
     if(blockDirection == 270)
     {
-      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) 
+      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 || ReadPx(blockArray[i].x-2,blockArray[i].y==blockArray[i].color) && blockArray[i].x > 0) 
       {
-        blockArray[i].x=0;
+       blockArray[i].x-=2;
       }
+       
     }
+  
     
     if(blockDirection == 0)
     {
-      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 && blockArray[i].y < 7) 
+      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 || ReadPx(blockArray[i].x,blockArray[i].y+2==blockArray[i].color) && blockArray[i].y < 7) 
       {
-        blockArray[i].y=7;
+        blockArray[i].y+=2;
        
       }
     }
    
     if(blockDirection == 90)
     {
-      if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0 && blockArray[i].x < 6) 
+      if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0  || ReadPx(blockArray[i].x+2,blockArray[i].y==blockArray[i].color) && blockArray[i].x < 6) 
       {
-        blockArray[i].x=6;
+        blockArray[i].x+=2;
        
       }
     }
     
     if(blockDirection == 180)
     {
-      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 && blockArray[i].y > 1) 
+      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 || ReadPx(blockArray[i].x,blockArray[i].y-2==blockArray[i].color) && blockArray[i].y > 1) 
       {
-        blockArray[i].y=1;
+        blockArray[i].y-=2;
        
       }
     }
@@ -153,5 +153,4 @@ void printArray()
     Serial.println();
   }
 }
-    
-    
+
