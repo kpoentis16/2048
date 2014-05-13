@@ -39,20 +39,18 @@ void loop()
   {
     drawBlock(blockArray[i].x,blockArray[i].y,blockArray[i].color);
   }
-  
+  drawNewBlock();
   DisplaySlate();
   delay(200);
-  
-  if (newBlock == true)
-      drawNewBlock();
   
   
   CheckButtonsPress();
     if(Button_Left)
     {
-      blockDirection=270; //changes all block directions to 270
+      blockDirection=270; 
       moveStart = true;
       newBlock = true;
+
     }
     
     if(Button_Up)
@@ -60,6 +58,7 @@ void loop()
       blockDirection=0;
       moveStart = true;
       newBlock = true;
+
     }
     
     if(Button_Right)
@@ -67,6 +66,7 @@ void loop()
       blockDirection=90;
       moveStart = true;
       newBlock = true;
+
     }
     
     if(Button_Down)
@@ -74,6 +74,7 @@ void loop()
       blockDirection=180;
       moveStart = true;
       newBlock = true;
+
     }
     
     
@@ -81,15 +82,28 @@ void loop()
       updateBlock();
     
     updateBlockDirection();
+    
+   /*
    
-    if(newBlock)
+   0, 2, 4, 6
+   0, 1, 2, 3
+   
+   1, 3, 5, 7
+   0, 1, 2, 3
+   
+   */
+    
+     if(newBlock)
     {
-      xblock = random (8);
-      yblock = random (8);
+      xblock = random (4)*2;
+      yblock = random (4)*2+1;
+      while (ReadPx(xblock, yblock) != 0)
+      {
+        xblock = random (8);
+        yblock = random (8);
+      }
       newBlock = false;
     }
-      
-    
     
     
     if (Button_A)
@@ -106,7 +120,6 @@ void drawBlock(int x, int y, int color)
   DrawPx(x+1,y,color);
   DrawPx(x+1,y-1,color);
   DrawPx(x,y-1,color);
- 
 }
 
 void drawNewBlock()
@@ -135,9 +148,13 @@ void updateBlock() //checks by reading px on screen and updates the block locati
     if(blockDirection == 270)
     {
       if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) 
-      //if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 || (ReadPx(blockArray[i].x-2,blockArray[i].y)==blockArray[i].color) && blockArray[i].x > 0) 
       {
        blockArray[i].x-=2;
+      }
+      
+      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==blockArray[i].color && blockArray[i].x > 0) 
+      {
+        blockArray[i].x-=2;
       }
        
     }
@@ -146,34 +163,43 @@ void updateBlock() //checks by reading px on screen and updates the block locati
     if(blockDirection == 0)
     {
       if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 && blockArray[i].y < 7) 
-      //if(ReadPx(blockArray[i].x,blockArray[i].y+2)==0 || (ReadPx(blockArray[i].x,blockArray[i].y+2)==/blockArray[i].color) && blockArray[i].y < 7) 
       {
         blockArray[i].y+=2;
-       
+      }
+      
+      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==blockArray[i].color && blockArray[i].y < 7) 
+      {
+        blockArray[i].y+=2;
       }
     }
    
     if(blockDirection == 90)
     {
       if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0 && blockArray[i].x < 6) 
-      //if(ReadPx(blockArray[i].x+2,blockArray[i].y)==0  || (ReadPx(blockArray[i].x+2,blockArray[i].y)==blockArray[i].color) && blockArray[i].x < 6) 
       {
         blockArray[i].x+=2;
-       
       }
-    }
+      
+      if(ReadPx(blockArray[i].x+2,blockArray[i].y)==blockArray[i].color && blockArray[i].x < 6)
+      {
+        blockArray[i].x+=2; 
+      }
     
     if(blockDirection == 180)
     {
       if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 && blockArray[i].y > 1) 
-      //if(ReadPx(blockArray[i].x,blockArray[i].y-2)==0 || (ReadPx(blockArray[i].x,blockArray[i].y-2)==blockArray[i].color) && blockArray[i].y > 1)
       {
         blockArray[i].y-=2;
-       
+      }
+      
+      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==blockArray[i].color && blockArray[i].y > 1)
+      {
+        blockArray[i].y-=2;
       }
     }
   }
 }
+
 
 void printArray()
 {
@@ -190,4 +216,6 @@ void printArray()
     Serial.println();
   }
 }
+
+
 
