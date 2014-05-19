@@ -91,7 +91,8 @@ void loop()
     {
       Point n = {xblock,yblock,7,-1};
       blockArray[numberOfBlocks] = n;
-      numberOfBlocks++;
+      if(numberOfBlocks < 16)
+        numberOfBlocks++;
       xblock = random (4)*2; // get these values: 0, 2, 4, 6
       yblock = random (4)*2+1;  // get these values:  1, 3, 5, 7
       while (ReadPx(xblock, yblock) != 0)
