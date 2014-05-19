@@ -39,7 +39,9 @@ void loop()
   {
     drawBlock(blockArray[i].x,blockArray[i].y,blockArray[i].color);
   }
+  
   drawNewBlock();
+  
   DisplaySlate();
   delay(200);
   
@@ -78,30 +80,22 @@ void loop()
     }
     
     
-    if(moveStart==true)
+    if(moveStart==true) //continuously tries to move the block in its direction
       updateBlock();
     
     updateBlockDirection();
-    
-   /*
    
-   0, 2, 4, 6
-   0, 1, 2, 3
-   
-   1, 3, 5, 7
-   0, 1, 2, 3
-   
-   */
     
      if(newBlock)
     {
-      xblock = random (4)*2;
-      yblock = random (4)*2+1;
+      xblock = random (4)*2; // get these values: 0, 2, 4, 6
+      yblock = random (4)*2+1;  // get these values:  1, 3, 5, 7
       while (ReadPx(xblock, yblock) != 0)
       {
-        xblock = random (8);
-        yblock = random (8);
+        xblock = random (4)*2; // keeps the new block moving properly
+        yblock = random (4)*2+1;
       }
+      
       newBlock = false;
     }
     
@@ -124,10 +118,10 @@ void drawBlock(int x, int y, int color)
 
 void drawNewBlock()
 {
-  DrawPx(xblock, yblock, Green);
-  DrawPx(xblock, yblock-1, Green);
-  DrawPx(xblock+1, yblock, Green);
-  DrawPx(xblock+1, yblock-1, Green);
+  DrawPx(xblock, yblock, 7);
+  DrawPx(xblock, yblock-1, 7);
+  DrawPx(xblock+1, yblock, 7);
+  DrawPx(xblock+1, yblock-1, 7);
 }
 
 
@@ -141,20 +135,20 @@ void updateBlockDirection() //changes the block direction
 }
 
 
-void updateBlock() //checks by reading px on screen and updates the block location accordling if px is dark
+void updateBlock() 
 {
   for(int i = 0; i < numberOfBlocks; i++)
   {
     if(blockDirection == 270)
     {
-      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) 
+      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==0 && blockArray[i].x > 0) // if the block space to the left is dark, and is greater than 0
       {
-       blockArray[i].x-=2;
+       blockArray[i].x-=2; //move the block left until it cannot move anymore
       }
       
-      if(ReadPx(blockArray[i].x-2,blockArray[i].y)==blockArray[i].color && blockArray[i].x > 0) 
+       else if(ReadPx(blockArray[i].x-2,blockArray[i].y)==blockArray[i].color && blockArray[i].x > 0) //else if the block space to the left is the same color, and is greater than 0
       {
-        blockArray[i].x-=2;
+        blockArray[i].x-=2; //then take its space
       }
        
     }
@@ -167,7 +161,7 @@ void updateBlock() //checks by reading px on screen and updates the block locati
         blockArray[i].y+=2;
       }
       
-      if(ReadPx(blockArray[i].x,blockArray[i].y+2)==blockArray[i].color && blockArray[i].y < 7) 
+      else if(ReadPx(blockArray[i].x,blockArray[i].y+2)==blockArray[i].color && blockArray[i].y < 7) 
       {
         blockArray[i].y+=2;
       }
@@ -184,6 +178,7 @@ void updateBlock() //checks by reading px on screen and updates the block locati
       {
         blockArray[i].x+=2; 
       }
+    }
     
     if(blockDirection == 180)
     {
@@ -192,13 +187,14 @@ void updateBlock() //checks by reading px on screen and updates the block locati
         blockArray[i].y-=2;
       }
       
-      if(ReadPx(blockArray[i].x,blockArray[i].y-2)==blockArray[i].color && blockArray[i].y > 1)
+      else if(ReadPx(blockArray[i].x,blockArray[i].y-2)==blockArray[i].color && blockArray[i].y > 1)
       {
         blockArray[i].y-=2;
       }
     }
   }
 }
+
 
 
 void printArray()
